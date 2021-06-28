@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Coffee.Data
 {
-    public class SolarDbContext : IdentityDbContext 
+    public class SolarDbContext : IdentityDbContext
     {
         public SolarDbContext()
         {
@@ -21,5 +21,12 @@ namespace Coffee.Data
         }
 
         public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<CustomerAddress> CustomerAddresses { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductInventory> ProductInventories{get; set;}
+        public virtual DbSet<ProductInventorySnapshot> ProductInventorySnapshots { get; set; }
+        public virtual DbSet<SalesOrder> SalesOrders { get; set; }
+        public virtual DbSet<SalesOrderItem> GetSalesOrderItems { get; set; }
+
     }
 }
