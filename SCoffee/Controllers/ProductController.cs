@@ -29,5 +29,13 @@ namespace SCoffee.Controllers
             var productViewModels = products.Select(product => ProductMapper.SerialiazeProductModel(product));
             return Ok(productViewModels);
         }
+
+        [HttpPatch("/api/product/{id}")]
+        public ActionResult ArchiveProduct(int id)
+        {
+            _logger.LogInformation("Archiving a product");
+            var result = _productService.ArchiveProduct(id);
+            return Ok(result);
+        }
     }
 }

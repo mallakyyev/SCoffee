@@ -8,7 +8,7 @@ using Coffee.Data.Models;
 
 namespace SCoffee.Serialization
 {
-    public class ProductMapper
+    public static class ProductMapper
     {
 
         /// <summary>
