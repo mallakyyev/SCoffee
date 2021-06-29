@@ -1,6 +1,7 @@
 ﻿using Coffee.Service.Product;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SCoffee.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,9 @@ namespace SCoffee.Controllers
         public ActionResult GetProduct()
         {
             _logger.LogInformation("Getting all products");
-            return Ok("");
+            var products = _productService.GetAllProducts();
+            var productViewModels = products.Select(product => ProductMapper.SerialiazeProductModel(product));
+            return Ok(productViewModels);
         }
     }
 }

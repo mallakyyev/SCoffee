@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Coffee.Data\Coffee.Data.csproj" />
-    <ProjectReference Include="..\SCoffee.Services\SCoffee.Services.csproj" />
+    <ProjectReference Include="..\Coffee.Service\Coffee.Service.csproj" />
   </ItemGroup>
 
 </Project>
