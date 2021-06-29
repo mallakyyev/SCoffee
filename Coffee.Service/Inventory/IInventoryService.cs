@@ -9,7 +9,7 @@ namespace Coffee.Service.Inventory
         public List<Data.Models.ProductInventory> GetCurrentInventory();
         public ServiceResponce<Data.Models.ProductInventory> UpdateUnitsAvailable(int id, int adjustment);
         public Data.Models.ProductInventory GetByProductId(int productId);
-        public void CreateSnapShot();
+       
         public List<Data.Models.ProductInventorySnapshot> GetSnapShotHistory();
     }
 }

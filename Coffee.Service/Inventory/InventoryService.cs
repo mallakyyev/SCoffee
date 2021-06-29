@@ -1,6 +1,7 @@
 ﻿using Coffee.Data;
 using Coffee.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,29 +12,39 @@ namespace Coffee.Service.Inventory
     public class InventoryService : IInventoryService
     {
         private readonly SolarDbContext _db;
-
-        public InventoryService(SolarDbContext db)
+        private readonly ILogger<InventoryService> _logger;
+        public InventoryService(SolarDbContext db, ILogger<InventoryService> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         /// <summary>
         /// Create a snapshop for logging changes
         /// </summary>
-        public void CreateSnapShot()
+        private  void CreateSnapShot(ProductInventory pi)
         {
-            throw new NotImplementedException();
+            var now = DateTime.UtcNow;
+            var snapshot = new ProductInventorySnapshot
+            {
+                SnapshotTime = now,
+                Product =pi.Product,
+                QuantityOnHand = pi.QuantityOnHand
+            };
+            _db.Add(snapshot);
+            
         }
 
-
         /// <summary>
-        /// 
+        /// Gets a ProductInventory instance by product id
         /// </summary>
         /// <param name="productId"></param>
         /// <returns></returns>
         public ProductInventory GetByProductId(int productId)
         {
-            throw new NotImplementedException();
+            return _db.ProductInventories
+                .Include(pi => pi.Product)
+                .FirstOrDefault(pi => pi.Product.Id == productId);
         }
 
         /// <summary>
@@ -47,9 +58,19 @@ namespace Coffee.Service.Inventory
                 .Where(pi => !pi.Product.IsArchived).ToList();
         }
 
+
+        /// <summary>
+        /// Gets the history of the snapshot for the previous x hours
+        /// </summary>
+        /// <returns></returns>
         public List<ProductInventorySnapshot> GetSnapShotHistory()
         {
-            throw new NotImplementedException();
+            var earliest = DateTime.UtcNow - TimeSpan.FromHours(6);
+            return _db.ProductInventorySnapshots
+                .Include(nap => nap.Product)
+                .Where(nap => nap.SnapshotTime > earliest 
+                            && !nap.Product.IsArchived)
+                .ToList();
         }
 
 
@@ -61,17 +82,37 @@ namespace Coffee.Service.Inventory
         /// <returns>ServiceResponce</returns>
         public ServiceResponce<ProductInventory> UpdateUnitsAvailable(int id, int adjustment)
         {
-            var inventory = _db.ProductInventories
-                .Include(inv => inv.Product)
-                .First(inventory => inventory.Product.Id == id);
-            inventory.QuantityOnHand += adjustment;
-            _db.SaveChanges();
-            return new ServiceResponce<ProductInventory>{
-                IsSuccess = true,
-                Data = inventory,
-                Message = $"Product {id} inventory adjusted",
-                Time = DateTime.UtcNow
-            };
+            try
+            {
+                var inventory = _db.ProductInventories
+                    .Include(inv => inv.Product)
+                    .First(inventory => inventory.Product.Id == id);
+                inventory.QuantityOnHand += adjustment;
+                try
+                {
+                    CreateSnapShot(inventory);
+                }catch(Exception e)
+                {
+                    _logger.LogError("");
+                }
+                _db.SaveChanges();
+                return new ServiceResponce<ProductInventory>
+                {
+                    IsSuccess = true,
+                    Data = inventory,
+                    Message = $"Product {id} inventory adjusted",
+                    Time = DateTime.UtcNow
+                };
+            }catch(Exception e)
+            {
+                return new ServiceResponce<ProductInventory>
+                {
+                    IsSuccess = false,
+                    Data = null,
+                    Message = e.Message,
+                    Time = DateTime.UtcNow
+                };
+            }
         }
     }
 }

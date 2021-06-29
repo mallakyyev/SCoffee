@@ -8,7 +8,7 @@ namespace Coffee.Service.Order
     public interface IOrderService
     {
         public List<SalesOrder> GetOrders();
-        public ServiceResponce<bool> GenerateInvoiceForOrder(SalesOrder order);
-        public ServiceResponce<bool> MArkFulfilled(int id);
+        public ServiceResponce<bool> GenerateOpenOrder(SalesOrder order);
+        public ServiceResponce<bool> MarkFulfilled(int id);
     }
 }

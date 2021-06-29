@@ -15,6 +15,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Coffee.Data;
 using Coffee.Service.Product;
+using Coffee.Service.Customer;
+using Coffee.Service.Inventory;
+using Coffee.Service.Order;
 
 namespace SCoffee
 {
@@ -43,6 +46,9 @@ namespace SCoffee
                 opts.UseNpgsql(Configuration.GetConnectionString("solar.dev"));
             });
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<IOrderService, OrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
