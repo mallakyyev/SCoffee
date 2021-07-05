@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Coffee.Data\Coffee.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Order\" />
-  </ItemGroup>
-
 </Project>
