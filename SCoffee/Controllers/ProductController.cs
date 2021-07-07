@@ -33,7 +33,7 @@ namespace SCoffee.Controllers
         [HttpPatch("/api/product/{id}")]
         public ActionResult ArchiveProduct(int id)
         {
-            _logger.LogInformation("Archiving a product");
+            _logger.LogInformation($"Archiving a product {id}");
             var result = _productService.ArchiveProduct(id);
             return Ok(result);
         }

@@ -35,10 +35,7 @@ namespace SCoffee
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SCoffee", Version = "v1" });
-            });
+           
 
             services.AddDbContext<SolarDbContext>(opts =>
             {
@@ -57,8 +54,7 @@ namespace SCoffee
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SCoffee v1"));
+              
             }
 
             app.UseHttpsRedirection();

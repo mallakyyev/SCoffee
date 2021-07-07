@@ -3,6 +3,7 @@ using Coffee.Service.Order;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SCoffee.Serialization;
 using SCoffee.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,9 @@ namespace SCoffee.Controllers
         public ActionResult GenerateNewOrder([FromBody] InvoiceModel invoice)
         {
             _logger.LogInformation("Generating invoice ");
-            var order = OderMapper.SerializeInvoiceOrder(invoice);
+            var order = OrderMapper.SerializeInvoiceOrder(invoice);
             order.Customer = _customerService.GetById(invoice.CustomerId);
+            _orderService.GenerateOpenOrder(order);
             return Ok();
         }
 

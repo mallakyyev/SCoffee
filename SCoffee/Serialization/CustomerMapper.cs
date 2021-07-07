@@ -65,6 +65,7 @@ namespace SCoffee.Serialization
         {
             return new CustomerAddressModel
             {
+                Id = address.Id,
                 AddressLine1 = address.AddressLine1,
                 AddressLine2 = address.AddressLine2,
                 City = address.City,
